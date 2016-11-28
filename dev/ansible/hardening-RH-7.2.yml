@@ -1,0 +1,149 @@
+---
+- hosts: all
+  tasks:
+    - name: "Software Updates: Verify that gpgcheck is activated"
+      lineinfile: dest=/etc/yum.conf regexp=^gpgcheck= line=gpgcheck=1
+    - name: Update all packages
+      yum: name=* state=latest
+    - name: "Grub.cfg permissions and owner"
+      file: path=/boot/grub2/grub.cfg owner=root group=root mode=0600
+    - name: "Restrict Core Dumps /etc/security/limits.conf"
+      lineinfile: dest=/etc/security/limits.conf line="* hard core 0"
+    - name: "Restrict Core Dumps /etc/sysctl.conf"
+      lineinfile: dest=/etc/sysctl.conf line="fs.suid_dumpable = 0"
+    - name: "Configure ExecShield"
+      lineinfile: dest=/etc/sysctl.conf line="kernel.exec-shield = 1"
+    - name: "Enable Randomized Virtual Memory Region Placement"
+      lineinfile: dest=/etc/sysctl.conf line="kernel.randomize_va_space = 2"
+    - name: "Disable unsecure services"
+      systemd: name={{item}} state=stopped enabled=no masked=yes
+      register: command_result
+      failed_when: "command_result|failed and 'Could not find the requested service' not in command_result.msg"
+      with_items:
+        - "chargen-dgram"
+        - "chargen-stream"
+        - "daytime-dgram"
+        - "daytime-stream"
+        - "echo-dgram"
+        - "echo-stream"
+        - "tcpmux-server"
+        - "avahi-daemon"
+        - "cups"
+        - "cups-lpd"
+        - "nfslock"
+        - "rpcgssd"
+        - "rpcbind"
+        - "rpcidmapd"
+        - "rpcsvcgssd"
+        - "syslog"
+    - name: "Remove telnet-server"
+      yum: name="telnet-server" state=removed
+    - name: "Remove telnet client"
+      yum: name="telnet" state=removed
+    - name: "Remove gcc"
+      yum: name="gcc" state=removed
+    - name: "Remove cmake"
+      yum: name="cmake" state=removed
+    - name: "Remove rsh-server"
+      yum: name="rsh-server" state=removed
+    - name: "Remove rsh"
+      yum: name="rsh" state=removed
+    - name: "Remove rlogin"
+      yum: name="rlogin" state=removed
+    - name: "Remove NIS Client"
+      yum: name="ypbind" state=removed
+    - name: "Remove NIS Server"
+      yum: name="ypserv" state=removed
+    - name: "Remove tftp"
+      yum: name="tftp" state=removed
+    - name: "Remove tftp-server"
+      yum: name="tftp-server" state=removed
+    - name: "Remove talk"
+      yum: name="talk" state=removed
+    - name: "Remove talk-server"
+      yum: name="talk-server" state=removed
+    - name: "Remove xinetd"
+      yum: name="xinetd" state=removed
+    - name: "Remove LDAP server"
+      yum: name="openldap-servers" state=removed
+    - name: "Disable vsftpd"
+      yum: name="vsftpd" state=removed
+    - name: "Disable httpd"
+      yum: name="httpd" state=removed
+    - name: "Remove DHCP Server"
+      yum: name="dhcp" state=removed
+    - name: "Remove X Window server: change systemd default.target"
+      file: path=/etc/systemd/system/default.target src=/usr/lib/systemd/system/multi-user.target state=link
+    - name: "Remove X Window server: remove xorg-x11-server-common package"
+      yum: name="xorg-x11-server-common" state=removed
+    - name: "Disable IP Forwarding"
+      lineinfile: dest=/etc/sysctl.conf line="net.ipv4.ip_forward parameter = 0"
+    - name: "Disable Send Packet Redirects (all)"
+      lineinfile: dest=/etc/sysctl.conf line="net.ipv4.conf.all.send_redirects = 0"
+    - name: "Disable Send Packet Redirects (default)"
+      lineinfile: dest=/etc/sysctl.conf line="net.ipv4.conf.default.send_redirects = 0"
+    - name: "Disable Source Routed Packet Acceptance (all)"
+      lineinfile: dest=/etc/sysctl.conf line="net.ipv4.conf.all.accept_source_route = 0"
+    - name: "Disable Source Routed Packet Acceptance (default)"
+      lineinfile: dest=/etc/sysctl.conf line="net.ipv4.conf.default.accept_source_route = 0"
+    - name: "Disable ICMP Redirect Acceptance (all)"
+      lineinfile: dest=/etc/sysctl.conf line="net.ipv4.conf.all.accept_redirects = 0"
+    - name: "Disable ICMP Redirect Acceptance (default)"
+      lineinfile: dest=/etc/sysctl.conf line="net.ipv4.conf.default.accept_redirects = 0"
+    - name: "Disable Secure ICMP Redirect Acceptance (all)"
+      lineinfile: dest=/etc/sysctl.conf line="net.ipv4.conf.all.secure_redirects = 0"
+    - name: "Disable Secure ICMP Redirect Acceptance (default)"
+      lineinfile: dest=/etc/sysctl.conf line="net.ipv4.conf.default.secure_redirects = 0"
+    - name: "Enable Bad Error Message Protection"
+      lineinfile: dest=/etc/sysctl.conf line="net.ipv4.icmp_ignore_bogus_error_responses = 1"
+    - name: "Enable TCP SYN cookies"
+      lineinfile: dest=/etc/sysctl.conf line="net.ipv4.tcp_syncookies = 1"
+    - name: "Enable RFC-recommended Source Route Validation (all)"
+      lineinfile: dest=/etc/sysctl.conf line="net.ipv4.conf.all.rp_filter = 1"
+    - name: "Enable RFC-recommended Source Route Validation (default)"
+      lineinfile: dest=/etc/sysctl.conf line="net.ipv4.conf.default.rp_filter = 1"
+    - name: "Enable Ignore Broadcast Requests"
+      lineinfile: dest=/etc/sysctl.conf line="net.ipv4.icmp_echo_ignore_broadcasts = 1"
+    - name: "Log Suspicious Packets (all)"
+      lineinfile: dest=/etc/sysctl.conf line="net.ipv4.conf.all.log_martians = 1"
+    - name: "Log Suspicious Packets (default)"
+      lineinfile: dest=/etc/sysctl.conf line="net.ipv4.conf.default.log_martians = 1"
+    - name: "Install rsyslog"
+      yum: name="rsyslog" state=latest
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

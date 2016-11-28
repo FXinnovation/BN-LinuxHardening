@@ -1,0 +1,14 @@
+Protocol 2
+IgnoreRhosts yes
+HostbasedAuthentication no
+PermitRootLogin no
+PermitEmptyPasswords no
+PubkeyAuthentication yes
+PasswordAuthentication no
+X11Forwarding no
+MaxAuthTries 5
+Ciphers aes128-ctr,aes192-ctr,aes256-ctr
+ClientAliveInterval 900 
+ClientAliveCountMax 0
+UsePAM yes
+LogLevel INFO
