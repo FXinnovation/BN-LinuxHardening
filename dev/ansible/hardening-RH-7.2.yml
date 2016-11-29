@@ -110,34 +110,111 @@
       lineinfile: dest=/etc/sysctl.conf line="net.ipv4.conf.default.log_martians = 1"
     - name: "Install rsyslog"
       yum: name="rsyslog" state=latest
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    - name: "Install new rsyslog.conf"
+      copy: src="templates/etc/rsyslog.conf" dest="/etc/rsyslog.conf" owner=root group=root mode=0644
+    - name: "Enable and reload rsyslog"
+      systemd: name="rsyslog" enabled=yes state=restarted masked=no
+    - name: "Secure log files"
+      file: path={{item}} owner=root group=root mode=0640 state=touch
+      with_items:
+        - "/var/log/secure"
+        - "/var/log/kern.log"
+        - "/var/log/daemon.log"
+        - "/var/log/syslog"
+        - "/var/log/unused.log"
+    - name: "Install new sshd_config"
+      copy: src="templates/etc/ssh/sshd_config" dest="/etc/ssh/sshd_config" owner=root group=root mode=0600
+    - name: "Get password hashing algorithm"
+      shell: "authconfig --test | grep 'password hashing algorithm is sha512'"
+      register: authconfig_result
+      ignore_errors: True
+    - name: "Define Password hashing algorithm to sha512"
+      command: "authconfig --passalgo=sha512 --update"
+      when: authconfig_result.rc != 0
+    - name: "pam_pwquality in /etc/pam.d/passwd"
+      lineinfile: dest=/etc/pam.d/passwd line="password required pam_pwquality.so try_first_pass retry=5"
+    - name: "pam_pwquality in /etc/security/pwquality.conf"
+      lineinfile: dest=/etc/pam.d/passwd line="minlen=8 dcredit=1 ucredit=1 ocredit=1 lcredit=1 minclass=4"
+    - name: "Lock account after 5 failed attempts (/etc/pam.d/password-auth)"
+      lineinfile: dest=/etc/pam.d/password-auth line="{{item}}"
+      with_items:
+        - "auth required pam_env.so"
+        - "auth required pam_faillock.so preauth audit silent deny=5 even_deny_root unlock_time=604800"
+        - "auth [success=1 default=bad] pam_unix.so"
+        - "auth [default=die] pam_faillock.so authfail audit deny=5 even_deny_root unlock_time=604800"
+        - "auth sufficient pam_faillock.so authsucc audit deny=5 even_deny_root unlock_time=604800"
+        - "auth required pam_deny.so"
+    - name: "Lock account after 5 failed attempts (/etc/pam.d/system-auth)"
+      lineinfile: dest=/etc/pam.d/system-auth line="{{item}}"
+      with_items:
+        - "auth required pam_env.so"
+        - "auth required pam_faillock.so preauth audit silent deny=5 even_deny_root unlock_time=604800"
+        - "auth [success=1 default=bad] pam_unix.so"
+        - "auth [default=die] pam_faillock.so authfail audit deny=5 even_deny_root unlock_time=604800"
+        - "auth sufficient pam_faillock.so authsucc audit deny=5 even_deny_root unlock_time=604800"
+        - "auth required pam_deny.so"
+        - "password sufficient pam_unix.so remember=4"
+    - name: "Restrict Access to the su Command"
+      lineinfile: dest=/etc/pam.d/su line="auth required pam_wheel.so use_uid"
+    - name: "Set Password Expiration Days to 90"
+      lineinfile: dest=/etc/login.defs regexp=^PASS_MAX_DAYS line="PASS_MAX_DAYS 90"
+    - name: "Set Password minimum day to 1"
+      lineinfile: dest=/etc/login.defs regexp=^PASS_MIN_DAYS line="PASS_MIN_DAYS 1"
+    - name: "Disable System Accounts"
+      script: scripts/disable_system_accounts.sh
+    - name: "Set User/Group Owner and Permission on cron files"
+      file: path="{{item}}" owner=root group=root mode=0600
+      with_items:
+        - "/etc/anacrontab"
+        - "/etc/crontab"
+        - "/etc/cron.hourly"
+        - "/etc/cron.daily"
+        - "/etc/cron.weekly"
+        - "/etc/cron.monthly"
+        - "/etc/cron.d"
+    - name: "Set User/Group Owner and Permission on passwd file"
+      file: path=/etc/passwd owner=root group=root mode=0644
+    - name: "Set User/Group Owner and Permission on group file"
+      file: path=/etc/group owner=root group=root mode=0644
+    - name: "Set User/Group Owner and Permission on shadow file"
+      file: path=/etc/shadow owner=root group=root mode=0600
+    - name: "Set User/Group Owner and Permission on gshadow file"
+      file: path=/etc/gshadow owner=root group=root mode=0600
+    - name: "Get world writable files"
+      shell: "df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -0002"
+      register: world_writable_files
+    - name: "Remove access to others on world writable file"
+      file: path="{{item}}" mode="o-w"
+      with_items: "{{ world_writable_files.stdout_lines }}"
+    - name: "Verify No Legacy \"+\" Entries Exist in user/group identity files"
+      lineinfile: dest={{item}} regexp="^\+:" state=absent
+      with_items:
+        - "/etc/passwd"
+        - "/etc/shadow"
+        - "/etc/group"
+    - name: "Download samhain"
+      get_url:
+        url: "http://www.la-samhna.de/samhain/samhain-current.tar.gz"
+        dest: /root/samhain-current.tar.gz
+        checksum: sha256:6b2db91fc92b3a9fc2edcc6ee16438156753c05f69c114856289e9f25ba0e50a
+    - name: "Remove old sources"
+      file: path=/root/src state=absent
+    - name: "Create /root/src"
+      file: path=/root/src state=directory
+    - name: "Extract samhain sources"
+      unarchive: src=/root/samhain-current.tar.gz remote_src=yes dest=/root/src
+    - name: "Build samhain 4.2.0 rpm"
+      command: echo rpmbuild -ta /root/src/samhain-4.2.0.tar.gz
+    - name: "Set Daemon umask"
+      lineinfile: dest=/etc/sysconfig/init line="umask 027"
+    - name: "Set Default umask for Users"
+      lineinfile: dest=/etc/profile.d/custom.sh line="umask 077" state=present create=yes
+    - name: "Remove OS Information from Login Warning Banners"
+      lineinfile: dest="{{item}}" regexp="\\m|\\r|\\s|\\S|\\v" state=absent
+      with_items:
+        - "/etc/issue"
+        - "/etc/issue.net"
+        - "/etc/motd"
 
 
 
