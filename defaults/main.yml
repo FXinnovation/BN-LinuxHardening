@@ -16,3 +16,4 @@ os_security_packages_list:
   - talk-server
   - xinetd
   - dhcp
+  - org-x11-server-common
