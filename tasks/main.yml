@@ -1,0 +1,7 @@
+---
+# tasks file for BN-LinuxHardening
+#
+
+- include: yum.yml
+  when: ansible_os_family == 'RedHat'
+  tags: yum
