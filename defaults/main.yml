@@ -10,3 +10,4 @@ os_security_packages_list:
   - rlogin
   - ypbind
   - ypserv
+  - tftp
