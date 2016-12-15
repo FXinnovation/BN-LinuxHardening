@@ -15,3 +15,4 @@ os_security_packages_list:
   - talk
   - talk-server
   - xinetd
+  - dhcp
