@@ -26,3 +26,4 @@ os_security_services_list:
   - daytime-dgram
   - echo-dgram
   - echo-stream
+  - tcpmux-server
