@@ -30,3 +30,5 @@ os_security_services_list:
   - vsftpd
   - httpd
   - avahi-daemon
+  - cups
+  - cups-lpd
