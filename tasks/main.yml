@@ -5,3 +5,5 @@
 - include: yum.yml
   when: ansible_os_family == 'RedHat'
   tags: yum
+
+- include: services.yml
