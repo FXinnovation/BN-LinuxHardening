@@ -32,3 +32,8 @@ os_security_services_list:
   - avahi-daemon
   - cups
   - cups-lpd
+  - nfslock
+  - rpcgssd
+  - rpcbind
+  - rpcidmapd
+  - rpcsvcgssd
