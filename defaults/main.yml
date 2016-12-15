@@ -1,3 +1,6 @@
 ---
 # defaults file for BN-LinuxHardening
 #
+
+os_security_packages_list: 
+  - telnet-server

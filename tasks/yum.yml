@@ -17,3 +17,9 @@
 - name: activate gpg-check for yum rhn if it exists
   replace: dest='/etc/yum/pluginconf.d/rhnplugin.conf' regexp='^\s*gpgcheck=0' replace='gpgcheck=1'
   when: rhnplugin_file.stat.exists
+
+- name: remove packages
+  yum: name='{{item}}' state=removed
+  with_items:
+    - "{{os_security_packages_list}}"
+
