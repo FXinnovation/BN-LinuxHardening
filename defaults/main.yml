@@ -4,3 +4,4 @@
 
 os_security_packages_list: 
   - telnet-server
+  - telnet
