@@ -7,3 +7,4 @@ os_security_packages_list:
   - telnet
   - rsh-server
   - rsh
+  - rlogin
