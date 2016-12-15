@@ -23,3 +23,4 @@ os_security_services_list:
   - chargen-dgram
   - chargen-stream
   - daytime-stream
+  - daytime-dgram
