@@ -29,3 +29,4 @@ os_security_services_list:
   - tcpmux-server
   - vsftpd
   - httpd
+  - avahi-daemon
