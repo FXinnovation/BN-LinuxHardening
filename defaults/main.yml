@@ -13,3 +13,4 @@ os_security_packages_list:
   - tftp
   - tftp-server
   - talk
+  - talk-server
