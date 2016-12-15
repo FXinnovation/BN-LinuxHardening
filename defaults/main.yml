@@ -28,3 +28,4 @@ os_security_services_list:
   - echo-stream
   - tcpmux-server
   - vsftpd
+  - httpd
