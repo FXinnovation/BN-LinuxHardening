@@ -11,4 +11,5 @@ os_security_packages_list:
   - ypbind
   - ypserv
   - tftp
+  - tftp-server
   - talk
