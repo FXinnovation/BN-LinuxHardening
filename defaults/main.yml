@@ -25,3 +25,4 @@ os_security_services_list:
   - daytime-stream
   - daytime-dgram
   - echo-dgram
+  - echo-stream
