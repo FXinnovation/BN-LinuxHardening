@@ -17,3 +17,4 @@ os_security_packages_list:
   - xinetd
   - dhcp
   - org-x11-server-common
+  - openldap-servers
