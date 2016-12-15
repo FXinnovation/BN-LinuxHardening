@@ -27,3 +27,4 @@ os_security_services_list:
   - echo-dgram
   - echo-stream
   - tcpmux-server
+  - vsftpd
