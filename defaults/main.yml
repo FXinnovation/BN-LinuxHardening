@@ -9,3 +9,4 @@ os_security_packages_list:
   - rsh
   - rlogin
   - ypbind
+  - ypserv
