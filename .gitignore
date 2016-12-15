@@ -1,1 +1,4 @@
-local/config
+# Kitchen generated file space
+test/integration
+.kitchen
+Gemfile.lock
