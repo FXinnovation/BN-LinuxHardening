@@ -70,3 +70,7 @@ sysctl_config:
 
   # Enable Ignore Broadcast Requests
   net.ipv4.icmp_echo_ignore_broadcasts: 1
+
+  # Log Suspicious Packets
+  net.ipv4.conf.all.log_martians: 1
+  net.ipv4.conf.default.log_martians: 1
