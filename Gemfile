@@ -5,4 +5,6 @@ group :test do
   gem 'kitchen-docker'
   gem 'test-kitchen'
   gem 'kitchen-vagrant'
+  gem 'inspec'
+  gem 'kitchen-inspec'
 end
