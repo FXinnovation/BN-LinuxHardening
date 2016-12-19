@@ -1,2 +1,5 @@
 ---
 # handlers file for BN-LinuxHardening
+
+- name: restart rsyslog
+  service: name=rsyslog state=restarted

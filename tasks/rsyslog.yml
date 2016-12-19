@@ -10,3 +10,8 @@
 - name: 'start rsyslog'
   systemd: state=started enabled=yes name='rsyslog'
 
+
+- name: "Install new rsyslog.conf"
+  copy: src="rsyslog.conf" dest="/etc/rsyslog.conf" owner=root group=root mode=0644
+  notify:
+    - restart rsyslog
