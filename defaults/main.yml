@@ -60,3 +60,6 @@ sysctl_config:
 
   # Enable Bad Error Message Protection
   net.ipv4.icmp_ignore_bogus_error_responses: 1
+
+  # Enable TCP SYN cookies
+  net.ipv4.tcp_syncookies: 1
