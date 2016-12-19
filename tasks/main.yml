@@ -7,3 +7,5 @@
   tags: yum
 
 - include: services.yml
+
+- include: sysctl.yml

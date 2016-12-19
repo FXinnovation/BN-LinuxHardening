@@ -1,0 +1,13 @@
+---
+- name: protect sysctl.conf
+  file: path='/etc/sysctl.conf' owner=root group=root mode=0444
+
+- name: Change various sysctl-settings, look at the sysctl-vars file for documentation
+  sysctl:
+    name: '{{ item.key }}'
+    value: '{{ item.value }}'
+    sysctl_set: yes
+    state: present
+    reload: yes
+    ignoreerrors: yes
+  with_dict: '{{ sysctl_config }}'
