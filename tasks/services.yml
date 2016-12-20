@@ -5,3 +5,6 @@
   failed_when: "command_result|failed and 'Could not find the requested service' not in command_result.msg"
   with_items:
     - "{{os_security_services_list}}"
+
+- name: 'start Audit Daemon'
+  systemd: state=started enabled=yes name=auditd

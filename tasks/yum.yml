@@ -23,3 +23,5 @@
   with_items:
     - "{{os_security_packages_list}}"
 
+- name: Install auditd
+  yum: name=audit state=latest
