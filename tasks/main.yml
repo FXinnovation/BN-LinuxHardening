@@ -9,4 +9,5 @@
 - include: services.yml
 
 - include: sysctl.yml
+- include : limits.yml
 - include: rsyslog.yml

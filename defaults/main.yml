@@ -74,3 +74,6 @@ sysctl_config:
   # Log Suspicious Packets
   net.ipv4.conf.all.log_martians: 1
   net.ipv4.conf.default.log_martians: 1
+
+  # Restrict Core Dumps
+  fs.suid_dumpable: 0
