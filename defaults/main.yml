@@ -78,3 +78,5 @@ sysctl_config:
   # Restrict Core Dumps
   fs.suid_dumpable: 0
 
+  # Enable Randomized Virtual Memory Region Placement
+  kernel.randomize_va_space: 2
