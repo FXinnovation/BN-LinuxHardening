@@ -1,0 +1,13 @@
+---
+- name: Cron Configuration files ownership
+  file: path='{{item}}' owner=root group=root mode=0600
+  with_items:
+    - /etc/anacrontab
+    - /etc/crontab
+    - /etc/cron.hourly
+    - /etc/cron.daily
+    - /etc/cron.weekly
+    - /etc/cron.monthly
+
+- name: Cron Configuration Directory ownership
+  file: path=/etc/cron.d owner=root group=root mode=0700

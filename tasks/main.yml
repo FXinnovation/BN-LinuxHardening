@@ -8,3 +8,4 @@
 - include: limits.yml
 - include: rsyslog.yml
 - include: sshd.yml
+- include: security.yml
