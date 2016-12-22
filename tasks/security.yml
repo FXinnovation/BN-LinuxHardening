@@ -20,3 +20,13 @@
 
 - name: shadow file security
   file: path=/etc/shadow owner=root group=root mode=0600
+
+- name: find world writeable files
+  shell: "df --local -P | awk {\'if (NR!=1) print $6\'} | xargs -I \'{}\' find \'{}\' -xdev -type f -perm -0002"
+  changed_when: False
+  check_mode: no
+  register: world_writeable_files
+
+- name: remove world writeable bit
+  file: path='{{item}}' mode="o-w"
+  with_items: '{{ world_writeable_files.stdout_lines }}'
