@@ -17,3 +17,6 @@
   with_items:
     - /etc/passwd
     - /etc/group
+
+- name: shadow file security
+  file: path=/etc/shadow owner=root group=root mode=0600
