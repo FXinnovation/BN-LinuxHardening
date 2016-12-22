@@ -12,5 +12,8 @@
 - name: Cron Configuration Directory ownership
   file: path=/etc/cron.d owner=root group=root mode=0700
 
-- name: Passwd file security
-  file: path=/etc/passwd owner=root group=root mode=0644
+- name: Passwd  / group file security
+  file: path='{{item}}' owner=root group=root mode=0644
+  with_items:
+    - /etc/passwd
+    - /etc/group
