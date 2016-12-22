@@ -19,7 +19,10 @@
     - /etc/group
 
 - name: shadow file security
-  file: path=/etc/shadow owner=root group=root mode=0600
+  file: path='{{item}}' owner=root group=root mode=0600
+  with_items:
+    - /etc/shadow
+    - /etc/gshadow
 
 - name: find world writeable files
   shell: "df --local -P | awk {\'if (NR!=1) print $6\'} | xargs -I \'{}\' find \'{}\' -xdev -type f -perm -0002"
