@@ -77,3 +77,4 @@ sysctl_config:
 
   # Restrict Core Dumps
   fs.suid_dumpable: 0
+
