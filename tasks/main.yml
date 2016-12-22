@@ -3,11 +3,8 @@
 #
 
 - include: yum.yml
-  when: ansible_os_family == 'RedHat'
-  tags: yum
-
 - include: services.yml
-
 - include: sysctl.yml
-- include : limits.yml
+- include: limits.yml
 - include: rsyslog.yml
+- include: sshd.yml
