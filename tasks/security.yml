@@ -40,3 +40,13 @@
     - /etc/passwd
     - /etc/shadow
     - /etc/group
+
+- name: "get all accounts with uid 0"
+  shell: awk -F'':'' '($3 == 0) { print $1 }' /etc/passwd removes=/etc/passwd 
+  changed_when: False
+  check_mode: no
+  register: uid_0_accounts
+
+- name: "Delete UID 0 Accounts Other Than root."
+  user: name='{{ item }}' state=absent force=yes
+  with_items: "{{ uid_0_accounts.stdout_lines | difference(['root']) }}"
