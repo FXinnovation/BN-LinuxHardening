@@ -35,6 +35,7 @@
   with_items: '{{ world_writeable_files.stdout_lines }}'
 
 - name: "Verify No Legacy \"+\" Entries Exist in user/group identity files"
-  lineinfile: dest={{item}} regexp="^\+:" state=absent
+  lineinfile: dest='{{item}}' regexp="^\+:" state=absent
   with_items:
-    - "/etc/passwd"
+    - /etc/passwd
+    - /etc/shadow
