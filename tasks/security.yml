@@ -39,3 +39,4 @@
   with_items:
     - /etc/passwd
     - /etc/shadow
+    - /etc/group
