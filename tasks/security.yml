@@ -53,3 +53,12 @@
 
 - name: "Set Daemon mask to 027"
   lineinfile: dest=/etc/sysconfig/init line="umask 027" regexp="^umask"
+
+- name: "add umask to profile"
+  copy: src="umask.sh" dest="/etc/profile.d/umask.sh" owner=root group=root mode=0644 
+
+- name: "replace all instances of umask in /etc/bashrc to umask 077"
+  replace:
+    dest: /etc/bashrc
+    regexp: '(\s+)umask.*?$'
+    replace: '\1umask 077'
