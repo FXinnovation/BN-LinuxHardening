@@ -69,3 +69,6 @@
     - "/etc/issue"
     - "/etc/issue.net"
     - "/etc/motd"
+
+- name: "Set proper permissions on the GRUB configuration file."
+  file: path=/boot/grub2/grub.cfg owner=root group=root mode=0600
