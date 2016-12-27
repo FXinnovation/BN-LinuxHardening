@@ -62,3 +62,10 @@
     dest: /etc/bashrc
     regexp: '(\s+)umask.*?$'
     replace: '\1umask 077'
+
+- name: "Remove OS Information from Login Warning Banners"
+  replace: dest="{{item}}" regexp="{{ '\\\\' }}[mrsv]" replace=""
+  with_items:
+    - "/etc/issue"
+    - "/etc/issue.net"
+    - "/etc/motd"
