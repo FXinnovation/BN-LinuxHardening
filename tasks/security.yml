@@ -50,3 +50,6 @@
 - name: "Delete UID 0 Accounts Other Than root."
   user: name='{{ item }}' state=absent force=yes
   with_items: "{{ uid_0_accounts.stdout_lines | difference(['root']) }}"
+
+- name: "Set Daemon mask to 027"
+  lineinfile: dest=/etc/sysconfig/init line="umask 027" regexp="^umask"
