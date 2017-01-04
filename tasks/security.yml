@@ -72,3 +72,6 @@
 
 - name: "Set proper permissions on the GRUB configuration file."
   file: path=/boot/grub2/grub.cfg owner=root group=root mode=0600
+
+- name: "Set Password minimum day to 1"
+  lineinfile: dest=/etc/login.defs regexp=^PASS_MIN_DAYS line="PASS_MIN_DAYS 1"
