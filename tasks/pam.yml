@@ -4,3 +4,4 @@
   with_items:
     - { src: 'pam.d/su', dest: '/etc/pam.d/su' }
     - { src: 'pam.d/system-auth', dest: '/etc/pam.d/system-auth' }
+    - { src: 'pam.d/passwd', dest: '/etc/pam.d/passwd' }
