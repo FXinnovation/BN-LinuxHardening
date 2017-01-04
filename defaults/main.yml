@@ -1,6 +1,7 @@
 ---
 # defaults file for BN-LinuxHardening
 #
+os_nologin_shell_path: /sbin/nologin
 
 os_security_packages_list: 
   - telnet-server
@@ -80,3 +81,9 @@ sysctl_config:
 
   # Enable Randomized Virtual Memory Region Placement
   kernel.randomize_va_space: 2
+
+os_always_ignore_users:
+  - root
+  - sync
+  - halt
+  - shutdown

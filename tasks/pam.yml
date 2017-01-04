@@ -3,6 +3,7 @@
   shell: "authconfig --test | grep 'password hashing algorithm is sha512'"
   register: authconfig_result
   ignore_errors: True
+  changed_when: False
   
 - name: "Define Password hashing algorithm to sha512"
   command: "authconfig --passalgo=sha512 --update"
