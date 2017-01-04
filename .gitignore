@@ -1,4 +1,5 @@
 # Kitchen generated file space
 test/integration
 .kitchen
+.kitchen.yml
 Gemfile.lock
