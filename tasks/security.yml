@@ -75,3 +75,6 @@
 
 - name: "Set Password minimum day to 1"
   lineinfile: dest=/etc/login.defs regexp=^PASS_MIN_DAYS line="PASS_MIN_DAYS 1"
+
+- name: "Set Password maximum day to 90"
+  lineinfile: dest=/etc/login.defs regexp=^PASS_MAX_DAYS line="PASS_MAX_DAYS 90"
