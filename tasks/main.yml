@@ -9,3 +9,4 @@
 - include: rsyslog.yml
 - include: sshd.yml
 - include: security.yml
+- include: pam.yml
