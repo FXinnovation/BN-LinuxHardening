@@ -23,3 +23,13 @@
   user: name='{{ item }}' shell='{{os_nologin_shell_path}}' password='*'
   with_items:
     - '{{sys_accs.stdout_lines | difference(os_always_ignore_users) }}'
+
+- name: get all user accounts
+  command: awk -F'':'' '{ if ( $3 > {{uid_max}} ) print $1}' /etc/passwd removes=/etc/passwd
+  changed_when: False
+  always_run: True
+  register: users
+
+- name: make sure the proper owner of the home directory is applied
+  file: path=~{{ item }} owner={{ item }}
+  with_items: '{{ users.stdout_lines }}'
