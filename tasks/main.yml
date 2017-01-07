@@ -3,6 +3,7 @@
 #
 
 - include: yum.yml
+- include: minimize_access.yml
 - include: services.yml
 - include: sysctl.yml
 - include: limits.yml

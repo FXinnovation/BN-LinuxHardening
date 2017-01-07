@@ -2,6 +2,7 @@
 # defaults file for BN-LinuxHardening
 #
 os_nologin_shell_path: /sbin/nologin
+os_env_extra_user_paths: []
 
 os_security_packages_list: 
   - telnet-server
