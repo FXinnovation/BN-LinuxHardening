@@ -31,5 +31,6 @@
   register: users
 
 - name: make sure the proper owner of the home directory is applied
-  file: path=~{{ item }} owner={{ item }}
-  with_items: '{{ users.stdout_lines }}'
+  file: path=~{{ item }} owner={{ item }} mode='g-w,o-rwx'
+  with_items: 
+    - '{{ users.stdout_lines | difference(["nfsnobody"]) }}'
