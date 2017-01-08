@@ -2,7 +2,7 @@
 - name: get UID_MIN from login.defs
   shell: awk '/^\s*UID_MIN\s*([0-9]*).*?$/ {print $2}' /etc/login.defs removes=/etc/login.defs
   register: uid_min
-  always_run: True
+  check_mode: no
   changed_when: False
 
 - name: calculate UID_MAX from UID_MIN by substracting 1
@@ -16,7 +16,7 @@
 - name: get all system accounts
   command: awk -F'':'' '{ if ( $3 <= {{uid_max}} ) print $1}' /etc/passwd removes=/etc/passwd 
   changed_when: False
-  always_run: True
+  check_mode: no
   register: sys_accs
 
 - name: change system accounts not on the user provided ignore-list
@@ -27,10 +27,23 @@
 - name: get all user accounts
   command: awk -F'':'' '{ if ( $3 > {{uid_max}} ) print $1}' /etc/passwd removes=/etc/passwd
   changed_when: False
-  always_run: True
+  check_mode: no
   register: users
 
 - name: make sure the proper owner of the home directory is applied
   file: path=~{{ item }} owner={{ item }} mode='g-w,o-rwx'
   with_items: 
     - '{{ users.stdout_lines | difference(["nfsnobody"]) }}'
+
+- name: find dot files of each user
+  command: find ~{{ item }} -maxdepth 1 -iname ".*" -type f
+  with_items:
+    - '{{ users.stdout_lines | difference(["nfsnobody"]) }}'
+  changed_when: False
+  check_mode: no
+  register: dotfiles
+
+- name: Make sure all dot files are only writable by their owner
+  file: path={{ item }} mode='go-w'
+  with_flattened:
+    - '{{ dotfiles.results | map(attribute="stdout_lines") | list }}'
