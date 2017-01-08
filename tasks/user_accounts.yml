@@ -47,3 +47,16 @@
   file: path={{ item }} mode='go-w'
   with_flattened:
     - '{{ dotfiles.results | map(attribute="stdout_lines") | list }}'
+
+- name: find netrc files of each user
+  command: find ~{{ item }} -maxdepth 1 -iname ".netrc" -type f
+  with_items:
+    - '{{ users.stdout_lines | difference(["nfsnobody"]) }}'
+  changed_when: False
+  check_mode: no
+  register: netrcfiles
+
+- name: Make sure all dot files are only writable by their owner
+  file: path={{ item }} mode=700
+  with_flattened:
+    - '{{ netrcfiles.results | map(attribute="stdout_lines") | list }}'
