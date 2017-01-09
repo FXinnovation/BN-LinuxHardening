@@ -2,6 +2,17 @@
 # tasks file for BN-LinuxHardening
 #
 
+- name: validate if samhain is already installed
+  shell: rpm -q samhain
+  register: samhain_installed
+  changed_when: False
+  failed_when: False
+  check_mode: no
+
+- name: validate that everything is compliant with samhain
+  command: /usr/local/sbin/samhain -t check -p warn --foreground
+  when: "samhain_installed.rc == 0"
+
 - include: yum.yml
 - include: minimize_access.yml
 - include: services.yml
@@ -13,3 +24,9 @@
 - include: user_accounts.yml
 - include: pam.yml
 - include: samhain.yml
+
+- name: update samhain database
+  command: /bin/true
+  changed_when: False
+  notify:
+    - update samhain

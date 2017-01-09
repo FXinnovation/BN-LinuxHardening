@@ -1,11 +1,4 @@
 ---
-- name: validate if samhain is already installed
-  shell: rpm -q samhain
-  register: samhain_installed
-  changed_when: False
-  failed_when: False
-  check_mode: no
-
 - name: "Download samhain"
   get_url:
     url: "http://www.la-samhna.de/samhain/samhain-current.tar.gz"
@@ -26,7 +19,7 @@
   when: "samhain_installed.rc != 0"
 
 - name: "Build samhain 4.2.0 rpm"
-  command: echo rpmbuild -ta /root/src/samhain-4.2.0.tar.gz
+  command: rpmbuild -ta /root/src/samhain-4.2.0.tar.gz
   when: "samhain_installed.rc != 0"
 
 - name: Install Samhain
@@ -35,3 +28,8 @@
 
 - name: Samhain configuration file
   copy: src="samhainrc" dest="/etc/samhainrc" owner=root group=root mode=0600
+  notify:
+    - init samhain
+
+# Make sure to init right away
+- meta: flush_handlers
