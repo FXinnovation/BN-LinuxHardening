@@ -12,3 +12,4 @@
 - include: security.yml
 - include: user_accounts.yml
 - include: pam.yml
+- include: samhain.yml

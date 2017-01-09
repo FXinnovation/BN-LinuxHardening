@@ -1,0 +1,34 @@
+---
+- name: validate if samhain is already installed
+  shell: rpm -q samhain
+  register: samhain_installed
+  changed_when: False
+  failed_when: False
+  check_mode: no
+
+- name: "Download samhain"
+  get_url:
+    url: "http://www.la-samhna.de/samhain/samhain-current.tar.gz"
+    dest: /root/samhain-current.tar.gz
+    checksum: sha256:6b2db91fc92b3a9fc2edcc6ee16438156753c05f69c114856289e9f25ba0e50a
+  when: "samhain_installed.rc != 0"
+
+- name: "Remove old sources"
+  file: path=/root/src state=absent
+  when: "samhain_installed.rc != 0"
+
+- name: "Create /root/src"
+  file: path=/root/src state=directory
+  when: "samhain_installed.rc != 0"
+
+- name: "Extract samhain sources"
+  unarchive: src=/root/samhain-current.tar.gz remote_src=yes dest=/root/src
+  when: "samhain_installed.rc != 0"
+
+- name: "Build samhain 4.2.0 rpm"
+  command: echo rpmbuild -ta /root/src/samhain-4.2.0.tar.gz
+  when: "samhain_installed.rc != 0"
+
+- name: Install Samhain
+  yum: name=/root/rpmbuild/RPMS/x86_64/samhain-4.2.0-1.x86_64.rpm disable_gpg_check=yes state=installed
+  when: "samhain_installed.rc != 0"
