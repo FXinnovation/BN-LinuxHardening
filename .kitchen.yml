@@ -29,6 +29,7 @@ platforms:
 
 verifier:
   name: inspec
+  sudo: True
   inspec_tests:
     - https://github.com/FXinnovation/BN-LinuxHardening-Tests
 
