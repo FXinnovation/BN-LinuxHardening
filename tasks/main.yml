@@ -11,6 +11,7 @@
 
 - name: validate that everything is compliant with samhain
   command: /usr/local/sbin/samhain -t check -p warn --foreground
+  changed_when: False
   when: "samhain_installed.rc == 0"
 
 - include: yum.yml
