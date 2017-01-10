@@ -88,3 +88,11 @@
     - { regex: '^ocredit', line: 'ocredit = 1' }
     - { regex: '^lcredit', line: 'lcredit = 1' }
     - { regex: '^minclass', line: 'minclass = 4' }
+
+- stat:
+    path: /var/spool/cron/root
+  register: root_crontab
+
+- name: Make sure root's crontab is owned by root
+  file: name=/var/spool/cron/root owner=root group=root mode=600
+  when: root_crontab.stat.exists == True
