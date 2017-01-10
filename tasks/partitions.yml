@@ -1,0 +1,7 @@
+- name: Bind mount /var/tmp
+  mount:
+    name: /var/tmp
+    src: /tmp
+    fstype: none
+    opts: bind
+    state: mounted

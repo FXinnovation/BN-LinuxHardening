@@ -14,6 +14,7 @@
   changed_when: False
   when: "samhain_installed.rc == 0"
 
+- include: partitions.yml
 - include: yum.yml
 - include: minimize_access.yml
 - include: services.yml
