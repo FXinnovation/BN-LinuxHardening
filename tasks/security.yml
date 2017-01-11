@@ -106,3 +106,6 @@
 - name: Set Sticky Bit on All World-Writable Directories
   file: path='{{item}}' mode="a+t"
   with_items: '{{ world_directories.stdout_lines }}'
+
+- name: Disable interactive startup
+  replace: dest=/etc/sysconfig/init regexp=^PROMPT=.* replace=PROMPT=no
