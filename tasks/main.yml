@@ -25,6 +25,7 @@
 - include: security.yml
 - include: user_accounts.yml
 - include: pam.yml
+- include: audit.yml
 - include: samhain.yml
 
 - name: update samhain database

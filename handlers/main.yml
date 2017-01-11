@@ -4,6 +4,9 @@
 - name: restart rsyslog
   service: name=rsyslog state=restarted
 
+- name: restart auditd
+  shell: service auditd restart
+
 - name: restart sshd
   service: name=sshd state=restarted
 
