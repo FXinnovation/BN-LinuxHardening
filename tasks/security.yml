@@ -109,3 +109,6 @@
 
 - name: Disable interactive startup
   replace: dest=/etc/sysconfig/init regexp=^PROMPT=.* replace=PROMPT=no
+
+- name: Require Authentication for Single-User Mode
+  lineinfile: dest=/etc/sysconfig/init regexp=^SINGLE= line=SINGLE=sulogin
