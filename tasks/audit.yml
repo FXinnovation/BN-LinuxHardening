@@ -15,3 +15,15 @@
     - "-a always,exit -F arch=b64 -S clock_settime -k time-change"
     - "-a always,exit -F arch=b32 -S clock_settime -k time-change"
     - "-w /etc/localtime -p wa -k time-change"
+
+- name: Record Events That Modify System's Network Environment
+  lineinfile: dest=/etc/audit/rules.d/audit.rules line="{{ item }}" regexp="^{{ item }}"
+  notify:
+    - restart auditd
+  with_items:
+    - "-a always,exit -F arch=b64 -S sethostname -S setdomainname -k system-locale"
+    - "-a always,exit -F arch=b32 -S sethostname -S setdomainname -k system-locale"
+    - "-w /etc/issue -p wa -k system-locale"
+    - "-w /etc/issue.net -p wa -k system-locale"
+    - "-w /etc/hosts -p wa -k system-locale"
+    - "-w /etc/sysconfig/network -p wa -k system-locale"
