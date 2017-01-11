@@ -96,3 +96,13 @@
 - name: Make sure root's crontab is owned by root
   file: name=/var/spool/cron/root owner=root group=root mode=600
   when: root_crontab.stat.exists == True
+
+- name: Find World-Writable Directories
+  shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d \( -perm -0002 -a ! -perm -1000 \) 2>/dev/null
+  changed_when: False
+  check_mode: no
+  register: world_directories
+
+- name: Set Sticky Bit on All World-Writable Directories
+  file: path='{{item}}' mode="a+t"
+  with_items: '{{ world_directories.stdout_lines }}'
