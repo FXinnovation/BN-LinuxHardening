@@ -4,3 +4,14 @@
   lineinfile: dest=/etc/audit/rules.d/audit.rules line="-e 2" regexp="^-e"
   notify:
     - restart auditd
+
+- name: Record Events That Modify Date and Time Information
+  lineinfile: dest=/etc/audit/rules.d/audit.rules line="{{ item }}" regexp="^{{ item }}"
+  notify:
+    - restart auditd
+  with_items:
+    - "-a always,exit -F arch=b64 -S adjtimex -S settimeofday -k time-change"
+    - "-a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time-change"
+    - "-a always,exit -F arch=b64 -S clock_settime -k time-change"
+    - "-a always,exit -F arch=b32 -S clock_settime -k time-change"
+    - "-w /etc/localtime -p wa -k time-change"
