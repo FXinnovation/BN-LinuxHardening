@@ -81,3 +81,16 @@
     - "-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access"
     - "-a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access"
     - "-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access"
+
+- name: find privileged programs
+  shell: find / -xdev \( -perm -4000 -o -perm -2000 \) -type f
+  check_mode: no
+  changed_when: False
+  register: privileged_programs
+
+- name: Collect Use of Privileged Commands
+  lineinfile: dest=/etc/audit/rules.d/audit.rules line="-a always,exit -F path={{item}} -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged" regexp="^-a always,exit -F path={{item}} -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged"
+  notify:
+    - restart auditd
+  with_items:
+    - "{{ privileged_programs.stdout_lines }}"
