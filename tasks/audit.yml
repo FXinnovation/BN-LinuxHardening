@@ -115,3 +115,8 @@
   with_items:
     - "-a exit,always -F arch=B64 -F euid=0 -S execve -k rootaction"
     - "-a exit,always -F arch=B32 -F euid=0 -S execve -k rootaction"
+
+- name: Keep All Auditing Information
+  lineinfile: dest=/etc/audit/auditd.conf line="max_log_file_action = keep_logs" regexp="^max_log_file_action = keep_logs"
+  notify:
+    - restart auditd
