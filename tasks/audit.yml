@@ -102,3 +102,8 @@
   with_items:
     - "-a always,exit -F arch=b64 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts"
     - "-a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts"
+
+- name: Collect System Administrator Actions (sudolog)
+  lineinfile: dest=/etc/audit/rules.d/audit.rules line="-w /var/log/sudo.log -p wa -k actions" regexp="^-w /var/log/sudo.log -p wa -k actions"
+  notify:
+    - restart auditd
