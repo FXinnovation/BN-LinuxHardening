@@ -94,3 +94,11 @@
     - restart auditd
   with_items:
     - "{{ privileged_programs.stdout_lines }}"
+
+- name: Collect Successful File System Mounts
+  lineinfile: dest=/etc/audit/rules.d/audit.rules line="{{ item }}" regexp="^{{ item }}"
+  notify:
+    - restart auditd
+  with_items:
+    - "-a always,exit -F arch=b64 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts"
+    - "-a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts"
