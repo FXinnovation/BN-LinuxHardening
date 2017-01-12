@@ -107,3 +107,11 @@
   lineinfile: dest=/etc/audit/rules.d/audit.rules line="-w /var/log/sudo.log -p wa -k actions" regexp="^-w /var/log/sudo.log -p wa -k actions"
   notify:
     - restart auditd
+
+- name: Collect root actions
+  lineinfile: dest=/etc/audit/rules.d/audit.rules line="{{ item }}" regexp="^{{ item }}"
+  notify:
+    - restart auditd
+  with_items:
+    - "-a exit,always -F arch=B64 -F euid=0 -S execve -k rootaction"
+    - "-a exit,always -F arch=B32 -F euid=0 -S execve -k rootaction"
