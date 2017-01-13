@@ -126,8 +126,6 @@
   notify:
     - restart auditd
 
-
-
 - name: Make the Audit Configuration Immutable
   lineinfile: dest=/etc/audit/rules.d/audit.rules line="-e 2" regexp="^-e"
   notify:
