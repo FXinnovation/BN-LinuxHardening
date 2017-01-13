@@ -117,6 +117,16 @@
     - "-a exit,always -F arch=B32 -F euid=0 -S execve -k rootaction"
 
 - name: Keep All Auditing Information
-  lineinfile: dest=/etc/audit/auditd.conf line="max_log_file_action = keep_logs" regexp="^max_log_file_action = keep_logs"
+  lineinfile: dest=/etc/audit/auditd.conf line="max_log_file_action = keep_logs" regexp="^max_log_file_action ="
+  notify:
+    - restart auditd
+
+- name: SSend audit logs to syslog
+  lineinfile: dest=/etc/audit/auditd.conf line="log_group = syslog" regexp="^log_group ="
+  notify:
+    - restart auditd
+
+- name: bla
+  copy: src="audisp-rsyslog.conf" dest="/etc/audisp/plugins.d/syslog.conf" owner=root group=root mode=0644
   notify:
     - restart auditd
