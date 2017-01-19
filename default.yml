@@ -1,0 +1,4 @@
+- name: wrapper playbook for kitchen testing "BN-LinuxHardening"
+  hosts: localhost
+  roles:
+    - BN-LinuxHardening

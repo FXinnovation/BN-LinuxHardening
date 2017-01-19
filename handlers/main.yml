@@ -1,0 +1,17 @@
+---
+# handlers file for BN-LinuxHardening
+
+- name: restart rsyslog
+  service: name=rsyslog state=restarted
+
+- name: restart auditd
+  shell: service auditd restart
+
+- name: restart sshd
+  service: name=sshd state=restarted
+
+- name: init samhain
+  command: /usr/local/sbin/samhain -t init -p warn --foreground
+
+- name: update samhain
+  command: /usr/local/sbin/samhain -t update -p warn --foreground

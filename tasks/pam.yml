@@ -1,0 +1,17 @@
+---
+- name: "Get password hashing algorithm"
+  shell: "authconfig --test | grep 'password hashing algorithm is sha512'"
+  register: authconfig_result
+  ignore_errors: True
+  changed_when: False
+  
+- name: "Define Password hashing algorithm to sha512"
+  command: "authconfig --passalgo=sha512 --update"
+  when: authconfig_result.rc != 0
+
+- name: "Configure PAM"
+  copy: src={{ item.src }} dest={{ item.dest }} owner=root group=root mode=0644
+  with_items:
+    - { src: 'pam.d/su', dest: '/etc/pam.d/su' }
+    - { src: 'pam.d/system-auth', dest: '/etc/pam.d/system-auth' }
+    - { src: 'pam.d/passwd', dest: '/etc/pam.d/passwd' }

@@ -1,0 +1,90 @@
+---
+# defaults file for BN-LinuxHardening
+#
+os_nologin_shell_path: /sbin/nologin
+os_env_extra_user_paths: []
+
+os_security_packages_list: 
+  - telnet-server
+  - telnet
+  - rsh-server
+  - rsh
+  - rlogin
+  - ypbind
+  - ypserv
+  - tftp
+  - tftp-server
+  - talk
+  - talk-server
+  - xinetd
+  - dhcp
+  - org-x11-server-common
+  - openldap-servers
+
+os_security_services_list:
+  - chargen-dgram
+  - chargen-stream
+  - daytime-stream
+  - daytime-dgram
+  - echo-dgram
+  - echo-stream
+  - tcpmux-server
+  - vsftpd
+  - httpd
+  - avahi-daemon
+  - cups
+  - cups-lpd
+  - nfslock
+  - rpcgssd
+  - rpcbind
+  - rpcidmapd
+  - rpcsvcgssd
+
+sysctl_config:
+  # Disable IPv4 traffic forwarding.
+  net.ipv4.ip_forward: 0
+
+  # Disable packet redirects
+  net.ipv4.conf.default.send_redirects: 0
+  net.ipv4.conf.all.send_redirects: 0
+
+  # Disable Source Routed Packet Acceptance
+  net.ipv4.conf.all.accept_source_route: 0
+  net.ipv4.conf.default.accept_source_route: 0
+
+  # Disable ICMP Redirect Acceptance
+  net.ipv4.conf.all.accept_redirects: 0
+  net.ipv4.conf.default.accept_redirects: 0
+
+  # Disable Secure ICMP Redirect Acceptance
+  net.ipv4.conf.all.secure_redirects: 0
+  net.ipv4.conf.default.secure_redirects: 0
+
+  # Enable Bad Error Message Protection
+  net.ipv4.icmp_ignore_bogus_error_responses: 1
+
+  # Enable TCP SYN cookies
+  net.ipv4.tcp_syncookies: 1
+
+  # Enable RFC-recommended Source Route Validation
+  net.ipv4.conf.all.rp_filter: 1
+  net.ipv4.conf.default.rp_filter: 1
+
+  # Enable Ignore Broadcast Requests
+  net.ipv4.icmp_echo_ignore_broadcasts: 1
+
+  # Log Suspicious Packets
+  net.ipv4.conf.all.log_martians: 1
+  net.ipv4.conf.default.log_martians: 1
+
+  # Restrict Core Dumps
+  fs.suid_dumpable: 0
+
+  # Enable Randomized Virtual Memory Region Placement
+  kernel.randomize_va_space: 2
+
+os_always_ignore_users:
+  - root
+  - sync
+  - halt
+  - shutdown

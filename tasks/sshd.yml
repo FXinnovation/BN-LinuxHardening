@@ -1,0 +1,12 @@
+---
+- name: SSH daemon configuration file
+  file:
+    path: /etc/ssh/sshd_config
+    owner: root
+    group: root
+    mode: 0600
+
+- name: ssh daemon configuration following best practices
+  template: src='sshd_config.j2' dest='/etc/ssh/sshd_config' owner=root group=root mode=0600
+  notify:
+    - restart sshd

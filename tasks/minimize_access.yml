@@ -1,0 +1,24 @@
+---
+# Using a two-pass approach for checking directories in order to support symlinks.
+- name: find directories for minimizing access
+  stat:
+    path: "{{ item }}"
+  register: minimize_access_directories
+  with_items:
+    - '/usr/local/sbin'
+    - '/usr/local/bin'
+    - '/usr/sbin'
+    - '/usr/bin'
+    - '/sbin'
+    - '/bin'
+    - '{{os_env_extra_user_paths}}'
+
+- name: minimize access
+  file: path='{{item.stat.path}}' mode='go-w' recurse=yes
+  when: item.stat.isdir
+  with_items: "{{ minimize_access_directories.results }}"
+
+- name: ensure binary paths are owned by root
+  file: path='{{item.stat.path}}' owner=root group=root
+  when: item.stat.isdir
+  with_items: "{{ minimize_access_directories.results }}"
