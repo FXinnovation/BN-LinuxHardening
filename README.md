@@ -1,6 +1,26 @@
 # BN-LinuxHardening
 Banque Nationale Linux Hardening
 
+## Description
+
+This roles provides numerous security-related configurations, providing all-round base protection.
+
+It configures:
+
+ * Configures package management e.g. allows only signed packages
+ * Remove packages with known issues
+ * Configures `pam` and `pam_limits` module
+ * Shadow password suite configuration
+ * Configures system path permissions
+ * Disable core dumps via soft limits
+ * Restrict Root Logins to System Console
+ * Set SUIDs
+ * Configures kernel parameters via sysctl
+
+## Requirements
+
+* Ansible
+
 ## Local Testing
 
 
