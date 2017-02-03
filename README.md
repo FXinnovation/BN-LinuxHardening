@@ -21,6 +21,18 @@ It configures:
 
 * Ansible
 
+## how to use this role
+
+inside your ansible installation copy this project under the **$ANSIBLE_ROOT/roles** folder.
+
+After you can apply this role by specifying 
+```
+- hosts: webservers
+  roles:
+     - BN-LinuxHardening
+```
+please see [playbook_roles](http://docs.ansible.com/ansible/playbooks_roles.html) for more details
+
 ## Local Testing
 
 
