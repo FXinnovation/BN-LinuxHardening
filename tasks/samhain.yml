@@ -14,6 +14,13 @@
   file: path=/root/src state=directory
   when: "samhain_installed.rc != 0"
 
+- name: "Install tools to build samhain"
+  yum: name='{{item}}' state=latest
+  when: "samhain_installed.rc != 0"
+  with_items:
+    - "rpm-build"
+    - "gcc"
+
 - name: "Extract samhain sources"
   unarchive: src=/root/samhain-current.tar.gz remote_src=yes dest=/root/src
   when: "samhain_installed.rc != 0"
@@ -30,6 +37,13 @@
   copy: src="samhainrc" dest="/etc/samhainrc" owner=root group=root mode=0600
   notify:
     - init samhain
+
+- name: "removed rpmbuild dependency that is no longer required"
+  yum: name='{{item}}' state=removed
+  when: "samhain_installed.rc != 0"
+  with_items:
+    - "rpm-build"
+    - "gcc"
 
 # Make sure to init right away
 - meta: flush_handlers
